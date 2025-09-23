@@ -6,7 +6,11 @@ import FormData from "form-data";
 import { fileURLToPath } from "url";
 import logger from "../../services/logger.js";
 import { v4 as uuidv4 } from "uuid";
+import dotenv from "dotenv";
 
+dotenv.config();
+
+const admin_server = process.env.admin_server;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -181,7 +185,7 @@ export const approveRequest = async (req, res) => {
 
     // Forward based on method type
     try {
-      const url = `http://localhost:3663/${endpoint_url}`;
+      const url = `${admin_server}/${endpoint_url}`;
 
       if (method === "PUT") {
         await axios.put(`${url}/${content_id}`, {
