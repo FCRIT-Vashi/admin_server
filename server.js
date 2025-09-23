@@ -46,12 +46,21 @@ import iicRoutes from "./routes/website/iicRoutes.js";
 dotenv.config();
 
 const port = process.env.port;
+const admin_client = process.env.admin_client;
+const admin_server = process.env.admin_server;
+const fcrit_website = process.env.fcrit_website;
+console.log(
+  "admin_client",
+  admin_client,
+  "admin_server",
+  admin_server,
+  "fcrit_website",
+  fcrit_website
+);
 const app = express();
 
 // Allowed hosts (only fcrit.ac.in for your use case)
-const ALLOWED_HOSTS = new Set([
-  "fcrit.ac.in",
-]);
+const ALLOWED_HOSTS = new Set(["fcrit.ac.in"]);
 
 // Simple private IP guard
 const isPrivateHost = (hostname) => {
@@ -66,9 +75,9 @@ app.use(
   cors({
     origin: function (origin, callback) {
       const allowedOrigins = [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:3663",
+        `${admin_client}`,
+        `${admin_server}`,
+        `${fcrit_website}`,
       ];
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true);
@@ -223,10 +232,10 @@ app.use("/api/faculties", facultyStaffRoute);
 app.use("/api/logs", activityLogsRoutes);
 
 app.listen(port, () => {
-  console.log(`Server Started at URI http://localhost:${port}/`);
+  console.log(`Server Started at URI ${admin_server}/`);
   logger.info("Server started", {
     id: uuidv4(), // Use a UUID or other method to generate an ID
-    title: `Server started at http://localhost:${port}/`,
+    title: `Server started at ${admin_server}/`,
     service: "fcrit backend server",
     description: "No additional info",
     level: "INFO",
