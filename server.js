@@ -74,11 +74,8 @@ const isPrivateHost = (hostname) => {
 app.use(
   cors({
     origin: function (origin, callback) {
-      const allowedOrigins = [
-        `${admin_client}`,
-        `${admin_server}`,
-        `${fcrit_website}`,
-      ];
+      const allowedOrigins = [admin_client, admin_server, fcrit_website];
+      console.log("CORS request from:", origin);
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true);
       } else {
@@ -89,9 +86,15 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+let secureState = false;
+if (process.env.status === "prod") {
+  secureState = true;
+}
 app.use(
   session({
     name: "connect.sid",
@@ -100,12 +103,16 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: secureState,
       sameSite: "Lax",
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );
+
+if (process.env.status == "prod") {
+  app.set("trust proxy", 1);
+}
 
 // Get the current directory path
 const __filename = fileURLToPath(import.meta.url);

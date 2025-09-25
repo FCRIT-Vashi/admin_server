@@ -7,5 +7,6 @@ db_name = agneladmin
 admin_client = http://localhost:5173
 admin_server = http://localhost:3663
 fcrit_website = http://localhost:5174
+status = prod | local
 
 port = 3663
