@@ -182,6 +182,7 @@ export const approveRequest = async (req, res) => {
     const { method, endpoint_url, content_id, proposed_content } = requestData;
 
     console.log("requestData", requestData);
+    console.log("admin_server", admin_server);
 
     // Forward based on method type
     try {
